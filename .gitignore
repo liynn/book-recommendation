@@ -1,0 +1,24 @@
+# IntelliJ
+*.iml
+*.ipr
+*.iws
+.idea/
+out/
+target/
+
+# Mac
+.DS_Store
+*.jar
+*.war
+*~
+*.class
+*.lock
+*.DS_Store
+*.swp
+*.out
+.settings/
+.classpath
+.project
+.metadata/
+.idea/
+logs/
