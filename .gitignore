@@ -5,11 +5,11 @@
 .idea/
 out/
 target/
-
+dependency-reduced-pom.xml
 # Mac
 .DS_Store
 *.jar
-*.war
+*.wargit
 *~
 *.class
 *.lock
