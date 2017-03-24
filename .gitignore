@@ -20,5 +20,6 @@ dependency-reduced-pom.xml
 .classpath
 .project
 .metadata/
+META-INF/
 .idea/
 logs/

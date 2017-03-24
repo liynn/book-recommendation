@@ -12,13 +12,10 @@ import org.apache.spark.{SparkConf, SparkContext}
 //基于模型的协同过滤
 object BookRecommendALS {
   def main(args: Array[String]) {
-    //Logger.getLogger("org.apache.spark").setLevel(Level.WARN)
-    //Logger.getLogger("org.eclipse.jetty.server").setLevel(Level.OFF)
-
     val conf = new SparkConf().setMaster("local[*]").setAppName("BookRecommendALS")
     val sc = new SparkContext(conf)
 
-    //获取图书评分数据
+    //获取图书评分数据("")
     val bookRatingsList = sc.textFile("/Users/wy/Documents/毕业设计/book/ratings.dat").map { lines =>
       val fields = lines.split("::")
       //用户编号,图书编号,评分,0～9的数值用于做数据分类

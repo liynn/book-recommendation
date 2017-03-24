@@ -1,5 +1,10 @@
-<html>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>首页-豆瓣图书推荐</title>
+</head>
 <body>
-<h2>Hello World!</h2>
+    ${pageContext.response.sendRedirect("/BookRecommend/home")}
 </body>
 </html>

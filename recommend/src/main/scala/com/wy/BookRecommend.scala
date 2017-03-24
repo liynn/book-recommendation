@@ -10,14 +10,11 @@ import org.apache.spark.{SparkConf, SparkContext}
 //基于模型的协同过滤
 object BookRecommend {
   def main(args: Array[String]) {
-    //Logger.getLogger("org.apache.spark").setLevel(Level.WARN)
-    //Logger.getLogger("org.eclipse.jetty.server").setLevel(Level.OFF)
-
-    val conf = new SparkConf().setMaster("local[*]").setAppName("BookRecommendALS")
+    val conf = new SparkConf().setMaster("spark://master:7077").setAppName("BookRecommend")
     val sc = new SparkContext(conf)
 
     //获取图书评分数据
-    val bookRatingsList = sc.textFile("/Users/wy/Documents/毕业设计/book/ratings.dat").map { lines =>
+    val bookRatingsList = sc.textFile(args(0)).map { lines =>
       val fields = lines.split("::")
       //用户编号,图书编号,评分,0～9的数值用于做数据分类
       (fields(0).toInt, fields(1).toInt, fields(2).toDouble, fields(3).toLong % 10)
@@ -36,7 +33,7 @@ object BookRecommend {
       + " 图书总数: " + bookRatings.map(_._2.product).distinct().count())
 
     //获取个人评分信息
-    val personalBookRatings = sc.textFile("/Users/wy/Documents/毕业设计/book/personalRatings.dat").map { lines =>
+    val personalBookRatings = sc.textFile(args(1)).map { lines =>
       val fields = lines.split("::")
       Rating(fields(0).toInt, fields(1).toInt, fields(2).toDouble)
     }
@@ -120,7 +117,7 @@ object BookRecommend {
     println("\n最佳模型计算的方差提升比率为:" + "%2.2f".format(improvement) + "%")
 
     //图书列表总数据，元组格式
-    val movieList = sc.textFile("/Users/wy/Documents/毕业设计/book/books.dat").map { lines =>
+    val movieList = sc.textFile(args(2)).map { lines =>
       val fields = lines.split("::")
       (fields(0).toInt, fields(1), fields(2))
     }
