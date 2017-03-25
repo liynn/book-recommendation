@@ -10,22 +10,21 @@ import us.codecraft.webmagic.processor.PageProcessor;
 /**
  * Created by wy on 2017/3/25.
  */
-public class BookSpider implements PageProcessor{
+public class BookSpider implements PageProcessor {
 
-    //static List<String[]> poolHosts = new ArrayList<String[]>();
+    //豆瓣图书标签页
+    private static final String URL = "https://book.douban.com/tag/";
 
-
-    private Site site = Site.me().setRetryTimes(3).setSleepTime(3000);
-
+    private Site site = Site.me().setRetryTimes(3).setSleepTime(1000);
 
     @Override
     public void process(Page page) {
-        //获取标签页地址
-        List<String> tagLinks = page.getHtml().links().regex("(https://book\\.douban\\.com/tag/[\\u4e00-\\u9fa5]+)").all();
+        //获取所有的标签连接
+        List<String> tagLinks = page.getHtml().links().regex("https://book\\.douban\\.com/tag/.*").all();
+        page.putField("tagLinks",tagLinks);
         page.addTargetRequests(tagLinks);
-        //获取所有的页数
-        List<String> pageLinks = page.getHtml().css("div.pagination").links().regex(".*/tag/.*\\?l=start.*").all();
-        page.putField("pageLinks",pageLinks);
+        String bookId = page.getHtml().links().regex("https://book.douban.com/subject/6082808/").get();
+        page.putField("bookId",bookId);
     }
 
     @Override
@@ -35,8 +34,11 @@ public class BookSpider implements PageProcessor{
 
     public static void main(String[] args) {
         Spider.create(new BookSpider())
-                .addUrl("https://book.douban.com/tag/")
+                //从"https://book.douban.com/tag/"开始抓
+                .addUrl(URL)
+                //开启5个线程抓取
                 .thread(5)
+                //启动爬虫
                 .run();
     }
 }
