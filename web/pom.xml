@@ -129,6 +129,14 @@
             <artifactId>commons-fileupload</artifactId>
         </dependency>
         <dependency>
+            <groupId>us.codecraft</groupId>
+            <artifactId>webmagic-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>us.codecraft</groupId>
+            <artifactId>webmagic-extension</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.wy</groupId>
             <artifactId>recommend</artifactId>
             <version>1.0-SNAPSHOT</version>
