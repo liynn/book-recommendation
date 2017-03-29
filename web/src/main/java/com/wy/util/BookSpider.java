@@ -1,5 +1,7 @@
 package com.wy.util;
 
+import com.google.common.collect.Lists;
+
 import java.util.List;
 
 import us.codecraft.webmagic.Page;
@@ -15,16 +17,56 @@ public class BookSpider implements PageProcessor {
     //豆瓣图书标签页
     private static final String URL = "https://book.douban.com/tag/";
 
-    private Site site = Site.me().setRetryTimes(3).setSleepTime(1000);
+    //标签页匹配规则
+    private static final String TAG_REGEX = "(https://book\\.douban\\.com/tag/[\\u4e00-\\u9fa5]+)";
+
+    //图书列表页匹配规则
+    private static final String BOOK_REGEX = "(https://book.douban.com/subject/[0-9]\\d{6})/";
+
+    //图书分页匹配规则
+    private static final String PAGE_REGEX = "(https://book\\.douban\\.com/tag/[\\u4e00-\\u9fa5]+\\?start=[2468]0\\&type=T)";
+
+    private Site site = Site.me().setRetryTimes(5).setSleepTime(30000);
 
     @Override
     public void process(Page page) {
         //获取所有的标签连接
-        List<String> tagLinks = page.getHtml().links().regex("https://book\\.douban\\.com/tag/.*").all();
-        page.putField("tagLinks",tagLinks);
-        page.addTargetRequests(tagLinks);
-        String bookId = page.getHtml().links().regex("https://book.douban.com/subject/6082808/").get();
-        page.putField("bookId",bookId);
+        if(page.getHtml().links().regex(TAG_REGEX).match()){
+            List<String> tagLinks = page.getHtml().links().regex(TAG_REGEX).all();
+            List<String> tagList = Lists.newArrayList();
+            tagLinks.forEach(link -> {
+                if(!tagList.contains(link)){
+                    tagList.add(link);
+                }
+            });
+            page.putField("tagLinks",tagList);
+            page.addTargetRequests(tagList);
+        }
+        if(page.getHtml().links().regex(PAGE_REGEX).match()){
+            List<String> pageLinks = page.getHtml().links().regex(PAGE_REGEX).all();
+            List<String> pageList = Lists.newArrayList();
+            pageLinks.forEach(link -> {
+                if(!pageList.contains(link)){
+                    pageList.add(link);
+                }
+            });
+            page.putField("pageLinks",pageList);
+            page.addTargetRequests(pageList);
+        }
+        if(page.getHtml().links().regex(BOOK_REGEX).match()){
+            List<String> bookIds = page.getHtml().links().regex(BOOK_REGEX)
+                     .replace("https://book.douban.com/subject/","")
+                    .replace("/","")
+                    .all();
+            List<String> ids = Lists.newArrayList();
+            bookIds.forEach(id -> {
+                if(!ids.contains(id)){
+                    ids.add(id);
+                }
+            });
+            page.putField("ids",ids);
+            FileUtil.write("/Users/wy/books.dat",ids);
+        }
     }
 
     @Override

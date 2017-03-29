@@ -13,7 +13,7 @@ public class BookModel {
     private String title;//图书名称
     private String[] author; //图书作者
     private List<TagModel> tags; //标签
-    private List<String> images;//图片地址
+    private ImagesModel images;//图片地址
     private String publisher;//出版社
     private String price;//价格
 }

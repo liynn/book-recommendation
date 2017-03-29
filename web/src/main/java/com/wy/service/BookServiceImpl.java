@@ -24,14 +24,7 @@ public class BookServiceImpl implements BookService{
     private BookDao bookDao;
 
     @Override
-    public List<Book> getAllBook(String id, String name) {
-        Map<String,Object> param = new HashMap<>();
-        if(id != null){
-            param.put("bookId",id);
-        }
-        if(name != null){
-            param.put("bookName",name);
-        }
-        return bookDao.queryAll(param);
+    public Book getById(String id){
+        return bookDao.getById(id);
     }
 }

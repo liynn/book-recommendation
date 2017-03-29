@@ -1,18 +1,17 @@
 package com.wy.domain;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 /**
  * Created by wy on 2017/3/23.
  */
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class Book {
-    private String bookId;
-    private String bookName;
-    private String bookImg;
-    private String bookTag;
+    private String id; //编号
+    private String name; //名称
+    private String author; //作者
+    private String publisher; //出版社
+    private String price; //价格
+    private String image; //图片地址
+    private String tag; //标签
 }

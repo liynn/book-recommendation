@@ -12,5 +12,7 @@ import java.util.Map;
  */
 @Mapper
 public interface BookDao {
-    List<Book> queryAll(Map<String,Object> critera);
+    List<Book> queryAll(Map<String,Object> criteria);
+
+    Book getById(String id);
 }

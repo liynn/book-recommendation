@@ -2,6 +2,7 @@ package com.wy.util;
 
 import com.alibaba.fastjson.JSON;
 import com.wy.model.BookModel;
+import com.wy.model.TagModel;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -11,13 +12,12 @@ import org.apache.http.impl.client.HttpClients;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-
-import lombok.extern.slf4j.Slf4j;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by wy on 2017/3/25.
  */
-@Slf4j
 public class HttpRequestUtil {
 
     //请求地址
@@ -39,15 +39,40 @@ public class HttpRequestUtil {
                 }
             }
         } catch (Exception e) {
-            log.error("获取图书信息失败:{}",e);
             e.printStackTrace();
         }
         return entityStringBuilder.toString();
     }
 
     public static void main(String[] args) {
-        String line = getBookInfo("6082808");
-        BookModel bookModel = JSON.parseObject(line, BookModel.class);
-        System.out.println(bookModel);
+        List<String> ids = FileUtil.read("/Users/wy/ids.dat");
+        for(String data : ids) {
+            String line = getBookInfo(data);
+            BookModel bookModel = JSON.parseObject(line, BookModel.class);
+            //作者数据处理
+            String author = "";
+            String[] authors = bookModel.getAuthor();
+            List<String> authorList = Arrays.asList(authors);
+            for (String value : authorList) {
+                if (authorList.indexOf(value) != authorList.size() - 1) {
+                    author = author + value + ",";
+                } else {
+                    author = author + value;
+                }
+            }
+            //标签数据处理
+            List<TagModel> tagList = bookModel.getTags();
+            String tag = "";
+            for (TagModel value : tagList) {
+                if (tagList.indexOf(value) != tagList.size() - 1) {
+                    tag = tag + value.getName() + "|";
+                } else {
+                    tag = tag + value.getName();
+                }
+            }
+            String content = bookModel.getId() + "::" + bookModel.getTitle() + "::" + author + "::" + bookModel.getPublisher() + "::" + bookModel.getPrice() + "::" + bookModel.getImages().getLarge() + "::" + tag;
+            System.out.println(content);
+            FileUtil.write("/Users/wy/Documents/毕业设计/data/books.dat", content);
+        }
     }
 }

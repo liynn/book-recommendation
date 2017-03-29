@@ -2,23 +2,28 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.wy.dao.BookDao" >
     <resultMap id="bookMap" type="book">
-        <result column="book_id" property="bookId"/>
-        <result column="book_name" property="bookName"/>
-        <result column="book_img" property="bookImg"/>
-        <result column="book_tag" property="bookTag"/>
+        <result column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="author" property="author"/>
+        <result column="publisher" property="publisher"/>
+        <result column="price" property="price"/>
+        <result column="image" property="image"/>
+        <result column="tag" property="tag"/>
     </resultMap>
     <sql id="tb">
         book
     </sql>
     <sql id="cols_all">
-        book_id,book_name,book_img,book_tag
+        id,name,author,publisher,price,image,tag
     </sql>
     <sql id="dynamic_condition">
-        <if test="bookId != null">AND book_id = #{bookId}</if>
-        <if test="bookName != null">AND book_name = #{bookName}</if>
-        <if test="bookImg != null">AND book_img = #{bookImg}</if>
-        <if test="bookTag != null">AND book_tag = #{bookTag}</if>
-
+        <if test="id != null">AND id = #{id}</if>
+        <if test="name != null">AND name = #{name}</if>
+        <if test="author != null">AND author = #{author}</if>
+        <if test="publisher != null">AND publisher = #{publisher}</if>
+        <if test="price != null">AND price = #{price}</if>
+        <if test="image != null">AND image = #{image}</if>
+        <if test="tag != null">AND tag = #{tag}</if>
     </sql>
     <select id="queryAll" parameterType="map" resultMap="bookMap">
         SELECT
@@ -27,5 +32,12 @@
         <include refid="tb"/>
         WHERE 1 = 1
         <include refid="dynamic_condition"/>
+    </select>
+    <select id="getById" parameterType="string" resultMap="bookMap">
+        SELECT
+        <include refid="cols_all"/>
+        FROM
+        <include refid="tb"/>
+        WHERE id = #{id}
     </select>
 </mapper>

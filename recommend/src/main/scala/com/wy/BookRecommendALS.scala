@@ -125,11 +125,11 @@ object BookRecommendALS {
     }
 
     //获取图书名称信息数据
-    val moviesName = movieList.map(x =>
+    val booksName = movieList.map(x =>
       (x._1, x._2)).collect().toMap
 
     //获取图书类型信息数据
-    val moviesType = movieList.map(x =>
+    val booksType = movieList.map(x =>
       (x._1, x._3)).collect().toMap
 
     var i = 1
@@ -137,12 +137,12 @@ object BookRecommendALS {
     //获取已阅读的图书编号
     val personalRatingBookIds = personalBookRatings.map(_.product).collect().toSet
     //在图书总数据中过滤掉我已经阅读图书数据,得到需要对其评分的图书数据
-    val needRatingBook = sc.parallelize(moviesName.keys.filter(personalRatingBookIds.contains(_)).toSeq)
+    val needRatingBook = sc.parallelize(booksName.keys.filter(personalRatingBookIds.contains(_)).toSeq)
     //预测对图书的评分，并按评分从高到低进行排序，将评分最高的10条记录作为可能喜欢的图书
     bestModel.predict(needRatingBook.map((0, _))).collect().sortBy(-_.rating).take(10).foreach { r =>
       println("%2d".format(i) + "----------> : \n图书名称 --> "
-        + moviesName(r.product) + " \n图书类型 --> "
-        + moviesType(r.product))
+        + booksName(r.product) + " \n图书类型 --> "
+        + booksType(r.product))
       i += 1
     }
   }
