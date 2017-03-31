@@ -14,7 +14,7 @@ public class HadoopUtil {
         //HDFS文件路径
         conf.set("fs.defaultFS", PropertyUtil.getProperty("fs.defaultFS"));
         //配置使用yarn框架
-        conf.set("mapreduce.framework.name", PropertyUtil.getProperty("mapreduce.framework.name"));
+        //conf.set("mapreduce.framework.name", PropertyUtil.getProperty("mapreduce.framework.name"));
         //配置resourcemanager
         conf.set("yarn.resourcemanager.address", PropertyUtil.getProperty("yarn.resourcemanager.address"));
         //配置资源分配器

@@ -10,18 +10,17 @@ import org.apache.spark.{SparkConf, SparkContext}
 //建立推荐模型
 object BuildRecommendModel {
 
-  //HDFS默认地址
-  val HDFS = "hdfs://master:9000/"
-
   def main(args: Array[String]) {
     if (args.length < 5) {
       System.err.println("参数个数错误:{}" + args.length)
     }
-    val conf = new SparkConf().setMaster("local[*]").setAppName("BuildRecommendModel")
+    val conf = new SparkConf().setMaster("yarn").setAppName("BuildRecommendModel")
+
     val sc = new SparkContext(conf)
+    sc.addFile("")
 
     //获取图书评分数据
-    val bookRatingData = HDFS+args(0)
+    val bookRatingData = args(0)
     val bookRatingsList = sc.textFile(bookRatingData).map { lines =>
       val fields = lines.split("::")
       //用户编号,图书编号,评分,0～9的数值用于做数据分类
@@ -50,9 +49,9 @@ object BuildRecommendModel {
     //获取一个训练模型
     val model = ALS.train(trainBookRatings, rank, iterator, lambda)
     //模型保存路径
-    val modelDir = HDFS+args(4)
+    val modelDir = args(4)
     val hadoopConf = sc.hadoopConfiguration
-    hadoopConf.set("fs.defaultFS", HDFS)
+    hadoopConf.set("fs.defaultFS", "hdfs://master:9000/")
     val fs = FileSystem.get(hadoopConf)
     val path = new Path(modelDir)
     if(fs.exists(path)){

@@ -1,53 +1,36 @@
 package com.wy.common;
 
-import org.apache.spark.deploy.SparkSubmit;
+import com.wy.util.HadoopUtil;
+import com.wy.util.PropertyUtil;
+
+import org.apache.spark.SparkConf;
+import org.apache.spark.deploy.yarn.Client;
+import org.apache.spark.deploy.yarn.ClientArguments;
 
 /**
  * Created by wy on 2017/3/29.
  */
 public class SparkTask {
     public static void submit() {
-//        String[] args = new String[]{
-//                "--name", "BuildRecommendModel",
-//                "--class", "com.wy.BuildRecommendModel",
-//                "--driver-memory", "2g",
-//                "--executor-memory", "2g",
-//                "--num-executors", "1",
-//                "--jar", "/Users/wy/recommend-1.0-SNAPSHOT.jar",
-//                "--files", "/usr/local/hadoop/etc/hadoop/yarn-site.xml",
-//                "--arg", "book/ratings.dat",
-//                "--arg", "10",
-//                "--arg", "0.1",
-//                "--arg", "20",
-//                "--arg", "model"
-//        };
-//
-//        System.setProperty("SPARK_YARN_MODE", "true");
-//        SparkConf sparkConf = new SparkConf();
-//        sparkConf.set("spark.yarn.scheduler.heartbeat.interval-ms",
-//                "1000");
-//
-//        ClientArguments arguments = new ClientArguments(args);
-//        new Client(arguments, HadoopUtil.getConf(), sparkConf).run();
         String[] args = new String[]{
-                "--master","spark://master:7077",
-                "--deploy-mode", "client",
-                "--name", "BuildRecommendModel",
+                "--jar", "/Users/wy/workspace/book-recommendation/recommend/target/recommend-1.0-SNAPSHOT.jar",
                 "--class", "com.wy.BuildRecommendModel",
-                "--driver-memory", "2g",
-                "--executor-memory", "2g",
-                "--executor-cores", "1",
-                "/Users/wy/recommend-1.0-SNAPSHOT.jar",
-                "book/ratings.dat",
-                "10",
-                "0.1",
-                "10",
-                "model"
+                "--arg", "hdfs://master:9000/book/ratings.dat",
+                "--arg", "10",
+                "--arg", "0.1",
+                "--arg", "20",
+                "--arg", "hdfs://master:9000/model"
         };
-        SparkSubmit.main(args);
+        System.setProperty("SPARK_YARN_MODE", "true");
+        SparkConf sparkConf = new SparkConf().setMaster("yarn-client").setAppName("BuildRecommendModel");
+        sparkConf.set("spark.yarn.jars", PropertyUtil.getProperty("spark.yarn.jars"));
+
+        ClientArguments arguments = new ClientArguments(args);
+        new Client(arguments, HadoopUtil.getConf(), sparkConf).run();
+
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args){
         submit();
     }
 }

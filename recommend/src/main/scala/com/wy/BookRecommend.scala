@@ -12,18 +12,15 @@ import org.apache.spark.{SparkConf, SparkContext}
 //基于模型的图书推荐
 object BookRecommend {
 
-  //HDFS默认地址
-  val HDFS = "hdfs://master:9000/"
-
   def main(args: Array[String]) {
     if (args.length < 4) {
       System.err.println("参数个数错误:{}" + args.length)
     }
-    val conf = new SparkConf().setMaster("local[*]").setAppName("BookRecommend")
+    val conf = new SparkConf().setMaster("yarn").setAppName("BookRecommend")
     val sc = new SparkContext(conf)
 
     //获取图书评分数据
-    val bookRatingData = HDFS+args(0)
+    val bookRatingData = args(0)
     val bookRatingsList = sc.textFile(bookRatingData).map { lines =>
       val fields = lines.split("::")
       //用户编号,图书编号,评分,0～9的数值用于做数据分类
@@ -40,7 +37,7 @@ object BookRecommend {
       .cache()
 
     //获取构建模型
-    val modelDir = HDFS+args(2)
+    val modelDir = args(2)
     val model = MatrixFactorizationModel.load(sc,modelDir)
     //将最佳模型在测试数据集上进行测试
     val testVariance = variance(model, testBookRatings, testBookRatings.count())
@@ -62,9 +59,9 @@ object BookRecommend {
     //在图书总数据中过滤掉已经阅读图书数据,得到需要对其评分的图书数据
     val needRatingBook = sc.parallelize(booksName.keys.filter(!personalRatingBookIds.contains(_)).toSeq)
     println("需要打分的图书数量:"+needRatingBook.count())
-    val resultDir = HDFS+args(4)
+    val resultDir = args(4)
     val hadoopConf = sc.hadoopConfiguration
-    hadoopConf.set("fs.defaultFS", HDFS)
+    hadoopConf.set("fs.defaultFS", "hdfs://master:9000/")
     val fs = FileSystem.get(hadoopConf)
     val path = new Path(resultDir)
     if(fs.exists(path)){

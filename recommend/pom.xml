@@ -12,7 +12,7 @@
     <properties>
         <encoding>UTF-8</encoding>
         <scala.version>2.11</scala.version>
-        <hadoop.version>3.0.0-alpha2</hadoop.version>
+        <hadoop.version>2.7.3</hadoop.version>
         <spark.version>2.1.0</spark.version>
     </properties>
 
@@ -63,7 +63,11 @@
             <artifactId>hadoop-hdfs</artifactId>
             <version>${hadoop.version}</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.apache.hadoop</groupId>
+            <artifactId>hadoop-yarn-client</artifactId>
+            <version>${hadoop.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.apache.spark</groupId>
             <artifactId>spark-core_${scala.version}</artifactId>
