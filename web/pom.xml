@@ -11,9 +11,8 @@
     <packaging>war</packaging>
     <name>web</name>
     <url>http://maven.apache.org</url>
+
     <dependencies>
-        <!-- web start -->
-        <!-- https://mvnrepository.com/artifact/javax.servlet/servlet-api -->
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>servlet-api</artifactId>

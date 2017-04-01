@@ -1,6 +1,5 @@
 package com.wy.controller;
 
-import com.wy.common.SparkTask;
 import com.wy.domain.Book;
 import com.wy.service.BookService;
 
@@ -27,7 +26,6 @@ public class BookController {
 
     @RequestMapping("/spark")
     public String testSpark(){
-        SparkTask.submit();
         return "home";
     }
 

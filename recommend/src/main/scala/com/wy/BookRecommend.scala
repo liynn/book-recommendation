@@ -16,7 +16,7 @@ object BookRecommend {
     if (args.length < 4) {
       System.err.println("参数个数错误:{}" + args.length)
     }
-    val conf = new SparkConf().setMaster("yarn").setAppName("BookRecommend")
+    val conf = new SparkConf().setMaster("yarn").setMaster("BookRecommend")
     val sc = new SparkContext(conf)
 
     //获取图书评分数据
