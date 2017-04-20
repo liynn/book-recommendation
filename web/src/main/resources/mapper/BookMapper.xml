@@ -16,24 +16,21 @@
     <sql id="cols_all">
         id,name,author,publisher,price,image,tag
     </sql>
-    <sql id="dynamic_condition">
-        <if test="id != null">AND id = #{id}</if>
-        <if test="name != null">AND name = #{name}</if>
-        <if test="author != null">AND author = #{author}</if>
-        <if test="publisher != null">AND publisher = #{publisher}</if>
-        <if test="price != null">AND price = #{price}</if>
-        <if test="image != null">AND image = #{image}</if>
-        <if test="tag != null">AND tag = #{tag}</if>
+    <sql id="values">
+        #{id},#{name},#{author},#{publisher},#{price},#{image},#{tag}
     </sql>
-    <select id="queryAll" parameterType="map" resultMap="bookMap">
-        SELECT
-        <include refid="cols_all"/>
-        FROM
+    <insert id="create" parameterType="book">
+        INSERT INTO
         <include refid="tb"/>
-        WHERE 1 = 1
-        <include refid="dynamic_condition"/>
-    </select>
-    <select id="getById" parameterType="string" resultMap="bookMap">
+        (
+        <include refid="cols_all"/>
+        )
+        VALUES
+        (
+        <include refid="values"/>
+        )
+    </insert>
+    <select id="get" parameterType="int" resultMap="bookMap">
         SELECT
         <include refid="cols_all"/>
         FROM

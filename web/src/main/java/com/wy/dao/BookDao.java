@@ -3,16 +3,14 @@ package com.wy.dao;
 import com.wy.domain.Book;
 
 import org.apache.ibatis.annotations.Mapper;
-
-import java.util.List;
-import java.util.Map;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * Created by wy on 2017/3/23.
  */
 @Mapper
 public interface BookDao {
-    List<Book> queryAll(Map<String,Object> criteria);
+    Book get(@Param("id") Integer id);
 
-    Book getById(String id);
+    Integer create(Book book);
 }

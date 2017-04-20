@@ -1,8 +1,6 @@
 package com.wy
 
-import org.apache.spark.mllib.recommendation.ALS
-import org.apache.spark.mllib.recommendation.Rating
-import org.apache.spark.mllib.recommendation.MatrixFactorizationModel
+import org.apache.spark.mllib.recommendation.{ALS, MatrixFactorizationModel, Rating}
 import org.apache.spark.rdd.RDD
 import org.apache.spark.{SparkConf, SparkContext}
 
@@ -15,8 +13,8 @@ object BookRecommendALS {
     val conf = new SparkConf().setMaster("local[*]").setAppName("BookRecommendALS")
     val sc = new SparkContext(conf)
 
-    //获取图书评分数据("")
-    val bookRatingsList = sc.textFile("/Users/wy/Documents/毕业设计/book/ratings.dat").map { lines =>
+    //获取图书评分数据
+    val bookRatingsList = sc.textFile("/Users/wy/Documents/毕业设计/data/ratings.dat").map { lines =>
       val fields = lines.split("::")
       //用户编号,图书编号,评分,0～9的数值用于做数据分类
       (fields(0).toInt, fields(1).toInt, fields(2).toDouble, fields(3).toLong % 10)
@@ -35,7 +33,7 @@ object BookRecommendALS {
       + " 图书总数: " + bookRatings.map(_._2.product).distinct().count())
 
     //获取个人评分信息
-    val personalBookRatings = sc.textFile("/Users/wy/Documents/毕业设计/book/personalRatings.dat").map { lines =>
+    val personalBookRatings = sc.textFile("/Users/wy/Documents/毕业设计/data/personalRatings.dat").map { lines =>
       val fields = lines.split("::")
       Rating(fields(0).toInt, fields(1).toInt, fields(2).toDouble)
     }
@@ -119,7 +117,7 @@ object BookRecommendALS {
     println("\n最佳模型计算的方差提升比率为:" + "%2.2f".format(improvement) + "%")
 
     //图书列表总数据，元组格式
-    val movieList = sc.textFile("/Users/wy/Documents/毕业设计/book/books.dat").map { lines =>
+    val movieList = sc.textFile("/Users/wy/Documents/毕业设计/data/books.dat").map { lines =>
       val fields = lines.split("::")
       (fields(0).toInt, fields(1), fields(2))
     }
@@ -127,6 +125,8 @@ object BookRecommendALS {
     //获取图书名称信息数据
     val booksName = movieList.map(x =>
       (x._1, x._2)).collect().toMap
+
+    movieList.take(10).foreach(println)
 
     //获取图书类型信息数据
     val booksType = movieList.map(x =>

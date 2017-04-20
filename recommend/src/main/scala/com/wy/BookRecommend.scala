@@ -1,6 +1,5 @@
 package com.wy
 
-import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.fs.{FileSystem, Path}
 import org.apache.spark.mllib.recommendation.{MatrixFactorizationModel, Rating}
 import org.apache.spark.rdd.RDD
@@ -13,12 +12,13 @@ import org.apache.spark.{SparkConf, SparkContext}
 object BookRecommend {
 
   def main(args: Array[String]) {
-    if (args.length < 4) {
+    //入参检查
+    if (args.length < 5) {
       System.err.println("参数个数错误:{}" + args.length)
     }
-    val conf = new SparkConf().setMaster("yarn").setMaster("BookRecommend")
+    //初始化SparkContext
+    val conf = new SparkConf().setAppName("BookRecommend")
     val sc = new SparkContext(conf)
-
     //获取图书评分数据
     val bookRatingData = args(0)
     val bookRatingsList = sc.textFile(bookRatingData).map { lines =>
@@ -26,23 +26,19 @@ object BookRecommend {
       //用户编号,图书编号,评分,0～9的数值用于做数据分类
       (fields(0).toInt, fields(1).toInt, fields(2).toDouble, fields(3).toLong % 10)
     }
-
     //将图书评分数据进行分类,其中键为0～9的数字,值为Rating类型
     val bookRatings = bookRatingsList.map(x =>
       (x._4, Rating(x._1.toInt, x._2.toInt, x._3.toDouble)))
-
     val userId = args(1).toInt
     val testBookRatings = bookRatings.filter(_._1 >= 8)
       .values
       .cache()
-
     //获取构建模型
     val modelDir = args(2)
     val model = MatrixFactorizationModel.load(sc,modelDir)
     //将最佳模型在测试数据集上进行测试
     val testVariance = variance(model, testBookRatings, testBookRatings.count())
     println("在测试数据集上计算的方差为:" + testVariance)
-
     //图书列表总数据，元组格式
     val bookData = args(3)
     val bookList = sc.textFile(bookData).map { lines =>
@@ -52,7 +48,6 @@ object BookRecommend {
     println("图书总数量:"+bookList.count())
     //获取图书名称信息数据
     val booksName = bookList.map(x => (x._1, x._2)).collect().toMap
-
     //需要推荐用户的已阅读图书编号
     val personalRatingBookIds = bookRatingsList.filter(_._1 == userId).map(_._2).collect().toSet
     println("已阅读并打分图书数量:"+personalRatingBookIds.size)

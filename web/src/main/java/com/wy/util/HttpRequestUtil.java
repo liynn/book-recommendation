@@ -23,6 +23,11 @@ public class HttpRequestUtil {
     //请求地址
     private static final String URL = "https://api.douban.com/v2/book/";
 
+    /**
+     * 发送请求获取豆瓣图书信息
+     *
+     * @param bookId 图书编号
+     */
     public static String getBookInfo(String bookId) {
         StringBuilder entityStringBuilder = null;
         HttpGet get = new HttpGet(URL + bookId);
@@ -31,7 +36,7 @@ public class HttpRequestUtil {
             HttpEntity entity = httpResponse.getEntity();
             entityStringBuilder = new StringBuilder();
             if (null != entity) {
-                try(BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(httpResponse.getEntity().getContent(), "UTF-8"), 8 * 1024)) {
+                try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(httpResponse.getEntity().getContent(), "UTF-8"), 8 * 1024)) {
                     String line;
                     while ((line = bufferedReader.readLine()) != null) {
                         entityStringBuilder.append(line + "\n");
@@ -46,7 +51,7 @@ public class HttpRequestUtil {
 
     public static void main(String[] args) {
         List<String> ids = FileUtil.read("/Users/wy/ids.dat");
-        for(String data : ids) {
+        for (String data : ids) {
             String line = getBookInfo(data);
             BookModel bookModel = JSON.parseObject(line, BookModel.class);
             //作者数据处理

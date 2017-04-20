@@ -28,6 +28,10 @@ public class BookSpider implements PageProcessor {
 
     private Site site = Site.me().setRetryTimes(5).setSleepTime(30000);
 
+    /**
+     * 爬取豆瓣图书编号
+     * @param page 豆瓣页面地址
+     */
     @Override
     public void process(Page page) {
         //获取所有的标签连接

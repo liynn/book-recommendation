@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wy.dao.UserDao" >
+    <resultMap id="userMap" type="user">
+        <result column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="sex" property="sex"/>
+        <result column="age" property="age"/>
+        <result column="phone" property="phone"/>
+        <result column="email" property="email"/>
+    </resultMap>
+    <sql id="tb">
+        user
+    </sql>
+    <sql id="cols">
+        name,sex,age,phone,email
+    </sql>
+    <sql id="cols_all">
+        id,
+        <include refid="cols"/>
+    </sql>
+    <sql id="values">
+        #{name},#{sex},#{age},#{phone},#{email}
+    </sql>
+    <select id="get" parameterType="int" resultMap="userMap">
+        SELECT
+        <include refid="cols_all"/>
+        FROM
+        <include refid="tb"/>
+        WHERE id = #{id}
+    </select>
+    <insert id="create" parameterType="user" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO
+        <include refid="tb"/>
+        (
+        <include refid="cols"/>
+        )
+        VALUES
+        (
+        <include refid="values"/>
+        )
+    </insert>
+</mapper>

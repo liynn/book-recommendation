@@ -23,3 +23,4 @@ dependency-reduced-pom.xml
 META-INF/
 .idea/
 logs/
+spark-warehouse

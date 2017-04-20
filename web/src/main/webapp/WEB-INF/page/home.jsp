@@ -11,15 +11,9 @@
             type="text/javascript"></script>
     <script src="${pageContext.request.contextPath}/static/js/bootstrap.min.js"
             type="text/javascript"></script>
+    <script src="${pageContext.request.contextPath}/static/js/book.js"
+            type="text/javascript"></script>
 
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $('#myTabs a').click(function (e) {
-                e.preventDefault();
-                $(this).tab('show');
-            })
-        });
-    </script>
 </head>
 <body style="padding: 0;margin: 0;border: 0">
 <nav class="navbar navbar-default"
@@ -35,21 +29,27 @@
     <ul class="nav nav-tabs" role="tablist">
         <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab"
                                                   data-toggle="tab">介绍</a></li>
-        <li role="presentation"><a href="#model" aria-controls="model" role="tab" data-toggle="tab">建立模型</a>
+        <li role="presentation">
+            <a href="#model" aria-controls="model" role="tab" data-toggle="tab">建立模型</a>
         </li>
         <li role="presentation"><a href="#result" aria-controls="result" role="tab"
                                    data-toggle="tab">推荐信息</a></li>
     </ul>
     <div class="tab-content">
-        <div role="tabpanel" class="tab-pane active text-center" id="home">简介</div>
+        <div role="tabpanel" class="tab-pane active text-center" id="home">简介
+            <div class="col-sm-offset-4 col-sm-10">
+                <button type="button" id="nextBtn" class="btn btn-primary col-md-6">下一步
+                </button>
+            </div>
+        </div>
         <div role="tabpanel" class="tab-pane text-center" id="model"
              style="width: 80%;margin: 30px auto;">
             <div class="form-horizontal">
                 <div class="form-group">
-                    <label for="address" class="col-sm-2 control-label">HDFS文件地址:</label>
+                    <label for="address" class="col-sm-2 control-label">评分文件地址:</label>
                     <div class="col-sm-10">
                         <input type="text" class="form-control" id="address"
-                               placeholder="HDFS文件地址">
+                               placeholder="评分文件地址">
                     </div>
                 </div>
                 <div class="form-group">
@@ -73,7 +73,33 @@
                 </div>
                 <div class="form-group">
                     <div class="col-sm-offset-4 col-sm-10">
-                        <button type="button" id="modelBtn" class="btn btn-primary col-md-6">建立模型</button>
+                        <button type="button" id="modelBtn" class="btn btn-primary col-md-6">建立模型
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade" id="progressModal" tabindex="-1" role="dialog"
+                 aria-labelledby="myModalLabel">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="progress progress-striped active"
+                             style="margin-bottom: 0px; height: 25px; border-radius: 5px;">
+                            <div id="progressId" class="progress-bar"
+                                 style="width: 1%; height: 100%;">0%
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade" id="tipModal" tabindex="-1" role="dialog"
+                 aria-labelledby="myModalLabel2">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="alert alert-info" style="margin-bottom: 0px;">
+                            <a href="#" onclick="closeTipModal('tipModal')" class="close">
+                                &times; </a>
+                            <div id="tipId">模型训练完成!</div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -83,83 +109,44 @@
                 <label>用户编号:</label>
                 <input type="text" id="userId" class="form-control" placeholder="用户编号"
                        style="display:inline;width: 150px;">
-                <button type="button" id="userBtn" class="btn btn-primary" style="margin-right: 50px;">查询
+                <button type="button" id="userBtn" class="btn btn-primary"
+                        style="margin-right: 50px;">查询
                 </button>
                 <labe style="margin-left: 50px;">推荐数目:</labe>
-                <select class="form-control" style="display:inline; width: 150px;">
+                <select id="number" class="form-control" style="display:inline; width: 150px;">
                     <option>6</option>
                     <option>9</option>
                     <option>12</option>
                 </select>
-                <button type="button" id="countBtn" class="btn btn-success">推荐</button>
+                <button type="button" id="recommendBtn" class="btn btn-success">推荐</button>
             </div>
-            <span style="margin-left: 10%">用户评分的书籍有:</span>
+            <span id="ratingLabel" style="margin-left: 10%;display: none;">用户评分的书籍有:</span>
             <div style="width: 80%;margin-left: 10%;">
-                <table class="table table-bordered" id="ratingBook" style="width: 100%">
-                    <tr>
-                        <td valign="top">
-                            <img src="https://img3.doubanio.com/lpic/s6384944.jpg"
-                                 style="float:left;width: 150px">
-                            <span style="float: left;margin-top:-4px;margin-left: 20px;">书名:百年孤独</span><br/>
-                            <span style="float: left;margin-top:9px;margin-left: 20px;">作者:张三</span><br/>
-                            <span style="float: left;margin-top:20px;margin-left:-70px;">出版社:人民出版社</span><br/>
-                            <span style="float: left;margin-top:33px;margin-left: -133px;">价格:20元</span><br/>
-                            <span style="float: left;margin-top:46px;;margin-left:-70px;">标签:文学</span>
-                        </td>
-                        <td valign="top">
-                            <img src="https://img3.doubanio.com/lpic/s6384944.jpg"
-                                 style="float:left;width: 150px">
-                            <span style="float: left;margin-top:-4px;margin-left: 20px;">书名:百年孤独</span><br/>
-                            <span style="float: left;margin-top:9px;margin-left: 20px;">作者:张三</span><br/>
-                            <span style="float: left;margin-top:20px;margin-left:-70px;">出版社:人民出版社</span><br/>
-                            <span style="float: left;margin-top:33px;margin-left: -133px;">价格:20元</span><br/>
-                            <span style="float: left;margin-top:46px;;margin-left:-70px;">标签:文学</span>
-                        </td>
-                        <td valign="top">
-                            <img src="https://img3.doubanio.com/lpic/s6384944.jpg"
-                                 style="float:left;width: 150px">
-                            <span style="float: left;margin-top:-4px;margin-left: 20px;">书名:百年孤独</span><br/>
-                            <span style="float: left;margin-top:9px;margin-left: 20px;">作者:张三</span><br/>
-                            <span style="float: left;margin-top:20px;margin-left:-70px;">出版社:人民出版社</span><br/>
-                            <span style="float: left;margin-top:33px;margin-left: -133px;">价格:20元</span><br/>
-                            <span style="float: left;margin-top:46px;;margin-left:-70px;">标签:文学</span>
-                        </td>
-                    </tr>
-                </table>
+                <table class="table table-bordered" id="ratingBook"
+                       style="width: 100%;display: none;font-size: 14px;"></table>
             </div>
-            <span style="margin-left: 10%">用户可能喜欢的书籍:</span>
+            <span id="recommendLabel" style="margin-left: 10%;display:none;">用户可能喜欢的书籍:</span>
             <div style="width: 80%;margin-left: 10%;">
-                <table class="table table-bordered" id="recommendBook" style="width: 100%;">
-                    <tr>
-                        <td valign="top">
-                            <img src="https://img3.doubanio.com/lpic/s6384944.jpg"
-                                 style="float:left;width: 150px">
-                            <span style="float: left;margin-top:-4px;margin-left: 20px;">书名:百年孤独</span><br/>
-                            <span style="float: left;margin-top:9px;margin-left: 20px;">作者:张三</span><br/>
-                            <span style="float: left;margin-top:20px;margin-left:-70px;">出版社:人民出版社</span><br/>
-                            <span style="float: left;margin-top:33px;margin-left: -133px;">价格:20元</span><br/>
-                            <span style="float: left;margin-top:46px;;margin-left:-70px;">标签:文学</span>
-                        </td>
-                        <td valign="top">
-                            <img src="https://img3.doubanio.com/lpic/s6384944.jpg"
-                                 style="float:left;width: 150px">
-                            <span style="float: left;margin-top:-4px;margin-left: 20px;">书名:百年孤独</span><br/>
-                            <span style="float: left;margin-top:9px;margin-left: 20px;">作者:张三</span><br/>
-                            <span style="float: left;margin-top:20px;margin-left:-70px;">出版社:人民出版社</span><br/>
-                            <span style="float: left;margin-top:33px;margin-left: -133px;">价格:20元</span><br/>
-                            <span style="float: left;margin-top:46px;;margin-left:-70px;">标签:文学</span>
-                        </td>
-                        <td valign="top">
-                            <img src="https://img3.doubanio.com/lpic/s6384944.jpg"
-                                 style="float:left;width: 150px">
-                            <span style="float: left;margin-top:-4px;margin-left: 20px;">书名:百年孤独</span><br/>
-                            <span style="float: left;margin-top:9px;margin-left: 20px;">作者:张三</span><br/>
-                            <span style="float: left;margin-top:20px;margin-left:-70px;">出版社:人民出版社</span><br/>
-                            <span style="float: left;margin-top:33px;margin-left: -133px;">价格:20元</span><br/>
-                            <span style="float: left;margin-top:46px;;margin-left:-70px;">标签:文学</span>
-                        </td>
-                    </tr>
-                </table>
+                <table class="table table-bordered" id="recommendBook"
+                       style="width: 100%;display: none;font-size: 14px;"></table>
+                <div class="modal fade" id="userModal" tabindex="-1" role="dialog"
+                     aria-labelledby="myModalLabel2">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="alert alert-info" style="margin-bottom: 0px;">
+                                <a href="#" onclick="closeModal('userModal')" class="close">
+                                    &times; </a>
+                                <div id="user">用户不存在</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal fade" id="recommendModal" tabindex="-1" role="dialog"
+                     aria-labelledby="myModalLabel2" style="position: fixed">
+                    <div class="modal-dialog" role="document" style="text-align: center;">
+                        <img src="${pageContext.request.contextPath}/static/images/load.gif"/>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

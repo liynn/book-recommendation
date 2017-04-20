@@ -12,34 +12,44 @@ import java.util.List;
  * Created by wy on 2017/3/26.
  */
 public class FileUtil {
-
+    /**
+     * 追加写入数据列表
+     *
+     * @param destName 写入地址
+     * @param contents 数据列表
+     */
     public static void write(String destName, List<String> contents) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(destName, true))) {
-            for (String content : contents){
-                writer.write(content+"\n");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+        for (String content : contents) {
+            write(destName, content);
         }
     }
 
+    /**
+     * 追加写入数据
+     *
+     * @param destName 写入地址
+     * @param content  写入内容
+     */
     public static void write(String destName, String content) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(destName, true))) {
-            writer.write(content+"\n");
+            writer.write(content + "\n");
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-
-
-    public static List<String> read(String srcName){
+    /**
+     * 读取文件数据
+     *
+     * @param srcName 文件地址
+     */
+    public static List<String> read(String srcName) {
         List<String> list = null;
         try (BufferedReader reader = new BufferedReader(new FileReader(srcName))) {
             list = Lists.newArrayList();
             String data;
-            while ((data = reader.readLine())!= null){
-                if(!list.contains(data)){
+            while ((data = reader.readLine()) != null) {
+                if (!list.contains(data)) {
                     list.add(data);
                 }
             }
@@ -47,9 +57,5 @@ public class FileUtil {
             e.printStackTrace();
         }
         return list;
-    }
-
-    public static void main(String[] args) {
-        write("/Users/wy/ids.dat",read("/Users/wy/books.dat"));
     }
 }
