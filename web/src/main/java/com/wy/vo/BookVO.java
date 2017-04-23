@@ -2,9 +2,6 @@ package com.wy.vo;
 
 import lombok.Data;
 
-/**
- * Created by wy on 2017/3/23.
- */
 @Data
 public class BookVO {
     private Integer id; //编号

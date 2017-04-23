@@ -1,12 +1,6 @@
 $(document).ready(function () {
     var modelProgressTimer;
     /**
-     * 下一步点击事件
-     */
-    $('#nextBtn').on('click', function () {
-        $('a[href="#model"]').tab('show');
-    });
-    /**
      * 建立模型点击事件
      */
     $('#modelBtn').on('click', function () {
@@ -27,8 +21,8 @@ $(document).ready(function () {
                    dateType: 'json',
                    success: function (data) {
                        if (data == null) {
-                           $('#tipId').html = "调用建模失败！";
-                           openModal("tipModal");
+                           $('#modelId').html = "调用建模失败!";
+                           openModal("modelModal");
                            return;
                        }
                        modelProgressTimer = setInterval(function () {
@@ -79,11 +73,11 @@ $(document).ready(function () {
                            // 关闭弹窗进度条
                            $('#progressModal').modal('hide');
                            // 开启提示条模态框
-                           $('#tipId').html(
-                               result == "FINISHED" ? "模型训练完成！" : (data == "FAILED" ? "调用建模失败!"
-                                   : "模型训练被杀死！"));
+                           $('#modelId').html(
+                               result == "FINISHED" ? "模型训练完成!" : (data == "FAILED" ? "调用建模失败!"
+                                   : "模型训练被杀死!"));
 
-                           openModal('tipModal');
+                           openModal('modelModal');
                            return;
                        }
                        setProgress('progressId', result);
@@ -107,51 +101,80 @@ $(document).ready(function () {
                    dataType: 'json',
                    data: {userId: userId},
                    success: function (response) {
+                       $('#userLabel').hide();
+                       $('#userBaseInfo').html("");
+                       $('#userBaseInfo').hide();
                        $('#ratingLabel').hide();
                        $('#ratingBook').html("");
                        $('#ratingBook').hide();
-                       if (!response.userId) {
-                           openModal('userModal');
+                       if (response.success) {
+                           //用户基本信息组装
+                           var userInfo = '<tr><td style="width: 375px;">编号:'
+                                          + response.result.userId
+                                          + '</td><td style="width: 375px;">姓名:'
+                                          + response.result.name
+                                          + '</td><td style="width: 375px;">性别:'
+                                          + response.result.sex
+                                          + '</td></tr><tr><td style="width: 375px;">年龄:'
+                                          + response.result.age
+                                          + '</td><td style="width: 375px;">电话:'
+                                          + response.result.phone
+                                          + '</td><td style="width: 375px;">邮箱:'
+                                          + response.result.email
+                                          + '</td></tr>';
+                           //用户评分信息组装
+                           var $bookList = response.result.bookList;
+                           var temp = '';
+                           $.each($bookList, function (index, content) {
+                               var star = '';
+                               for (var i = 0; i < parseInt(content.score); i++) {
+                                   star +=
+                                       '<img src="static/images/star.png" style="margin-top: -5px"/>';
+                               }
+                               if (index % 3 == 0) {
+                                   temp += '<tr>'
+                               }
+                               temp += '<td valign="top" style="padding: 10px; width:375px;">'
+                                       + '<img src="' + content.image
+                                       + '"style="float:left;width: 120px">'
+                                       + '<div style="float: left;width: 222px;margin-left: 10px;">'
+                                       + '<span style="color: #3377aa;">'
+                                       + content.name + '</span><br/><br/>'
+                                       + '<span>作者:'
+                                       + content.author + '</span><br/>'
+                                       + '<span>出版社:'
+                                       + content.publisher + '</span><br/>'
+                                       + '<span>价格:'
+                                       + content.price + '</span><br/><br/>'
+                                       + '<span>评分:'
+                                       + star + '</span>'
+                                       + '</div>'
+                                       + '</td>';
+                               if (index % 3 == 2) {
+                                   temp += '</tr>'
+                               }
+                           });
+                           //设置用户基本信息
+                           $('#userBaseInfo').append(userInfo);
+                           //设置用户评分信息
+                           $('#ratingBook').append(temp);
+                           $("#ratingBook tr").each(function () {
+                               var len = $(this).children("td").length;
+                               if (len == 1) {
+                                   $(this).append('<td></td><td></td>');
+                               }
+                               if (len == 2) {
+                                   $(this).append('<td></td>');
+                               }
+                           });
+                           $('#userLabel').show();
+                           $('#userBaseInfo').show();
+                           $('#ratingLabel').show();
+                           $('#ratingBook').show();
+                       } else {
+                           $('#tipId').html(response.error);
+                           openModal('tipModal');
                        }
-                       var $bookList = response.bookList;
-                       var temp = '';
-                       $.each($bookList, function (index, content) {
-                           if (index % 3 == 0) {
-                               temp += '<tr style="border: 1px red;">'
-                           }
-                           temp += '<td valign="top" style="padding: 10px; width:375px;">'
-                                   + '<img src="' + content.image
-                                   + '"style="float:left;width: 120px">'
-                                   + '<div style="float: left;width: 222px;margin-left: 10px;">'
-                                   + '<span style="color: #3377aa;">'
-                                   + content.name + '</span><br/><br/>'
-                                   + '<span>作者:'
-                                   + content.author + '</span><br/>'
-                                   + '<span>出版社:'
-                                   + content.publisher + '</span><br/>'
-                                   + '<span>价格:'
-                                   + content.price + '</span><br/><br/>'
-                                   + '<span>评分:'
-                                   + content.score + '星</span>'
-                                   + '</div>'
-                                   + '</td>';
-                           if (index % 3 == 2) {
-                               temp += '</tr>'
-                           }
-                       });
-                       //设置评分信息
-                       $('#ratingBook').append(temp);
-                       $("#ratingBook tr").each(function () {
-                           var len = $(this).children("td").length;
-                           if (len == 1) {
-                               $(this).append('<td></td><td></td>');
-                           }
-                           if (len == 2) {
-                               $(this).append('<td></td>');
-                           }
-                       });
-                       $('#ratingLabel').show();
-                       $('#ratingBook').show();
                    }
                });
     });
@@ -159,9 +182,9 @@ $(document).ready(function () {
     /**
      *  推荐按钮点击事件
      */
-    $('#recommendBtn').on('click',function () {
+    $('#recommendBtn').on('click', function () {
         var dialog = $('#recommendModal').find('.modal-dialog');
-        dialog.css({'margin-top': 100});
+        dialog.css({'margin-top': 360});
         $('#recommendModal').modal('show');
         //获取用户编号
         var userId = $('#userId').val();
@@ -174,49 +197,53 @@ $(document).ready(function () {
                    dataType: 'json',
                    data: {userId: userId, number: number},
                    success: function (response) {
-                       debugger
                        $('#recommendModal').modal('hide');
                        $('#recommendLabel').hide();
                        $('#recommendBook').html("");
                        $('#recommendBook').hide();
-                       var temp = '';
-                       $.each(response, function (index, content) {
-                           if (index % 3 == 0) {
-                               temp += '<tr style="border: 1px red;">'
-                           }
-                           temp += '<td valign="top" style="padding: 10px; width:375px;">'
-                                   + '<img src="' + content.image
-                                   + '"style="float:left;width: 120px">'
-                                   + '<div style="float: left;width: 222px;margin-left: 10px;">'
-                                   + '<span style="color: #3377aa;">'
-                                   + content.name + '</span><br/><br/>'
-                                   + '<span>作者:'
-                                   + content.author + '</span><br/>'
-                                   + '<span>出版社:'
-                                   + content.publisher + '</span><br/>'
-                                   + '<span>价格:'
-                                   + content.price + '</span><br/><br/>'
-                                   + '<span>推荐分:'
-                                   + content.score + '</span>'
-                                   + '</div>'
-                                   + '</td>';
-                           if (index % 3 == 2) {
-                               temp += '</tr>'
-                           }
-                       });
-                       //设置评分信息
-                       $('#recommendBook').append(temp);
-                       $("#recommendBook tr").each(function () {
-                           var len = $(this).children("td").length;
-                           if (len == 1) {
-                               $(this).append('<td></td><td></td>');
-                           }
-                           if (len == 2) {
-                               $(this).append('<td></td>');
-                           }
-                       });
-                       $('#recommendLabel').show();
-                       $('#recommendBook').show();
+                       if (response.success) {
+                           var temp = '';
+                           $.each(response.result, function (index, content) {
+                               if (index % 3 == 0) {
+                                   temp += '<tr>'
+                               }
+                               temp += '<td valign="top" style="padding: 10px; width:375px;">'
+                                       + '<img src="' + content.image
+                                       + '"style="float:left;width: 120px">'
+                                       + '<div style="float: left;width: 222px;margin-left: 10px;">'
+                                       + '<span style="color: #3377aa;">'
+                                       + content.name + '</span><br/><br/>'
+                                       + '<span>作者:'
+                                       + content.author + '</span><br/>'
+                                       + '<span>出版社:'
+                                       + content.publisher + '</span><br/>'
+                                       + '<span>价格:'
+                                       + content.price + '</span><br/><br/>'
+                                       + '<span>推荐分:<span style="color: #f0871e">'
+                                       + content.score + '</span></span>'
+                                       + '</div>'
+                                       + '</td>';
+                               if (index % 3 == 2) {
+                                   temp += '</tr>'
+                               }
+                           });
+                           //设置评分信息
+                           $('#recommendBook').append(temp);
+                           $("#recommendBook tr").each(function () {
+                               var len = $(this).children("td").length;
+                               if (len == 1) {
+                                   $(this).append('<td></td><td></td>');
+                               }
+                               if (len == 2) {
+                                   $(this).append('<td></td>');
+                               }
+                           });
+                           $('#recommendLabel').show();
+                           $('#recommendBook').show();
+                       } else {
+                           $('#tipId').html(response.error);
+                           openModal('tipModal');
+                       }
                    }
                });
     });
@@ -237,19 +264,19 @@ function openModal(id) {
     $('#' + id).modal({backdrop: 'static', keyboard: false});
 }
 /**
- * 关闭提示模态框
+ * 关闭模型进度条
  * @param id
  */
-function closeTipModal(id) {
+function closeModelModal(id) {
     $('#' + id).modal('hide');
     $('a[href="#result"]').tab('show');
 }
 
 /**
- * 关闭模态框
+ * 关闭提示模态框
  * @param id
  */
-function closeModal(id) {
+function closeTipModal(id) {
     $('#' + id).modal('hide');
 }
 

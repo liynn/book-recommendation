@@ -5,9 +5,6 @@ import org.apache.spark.mllib.recommendation.{MatrixFactorizationModel, Rating}
 import org.apache.spark.rdd.RDD
 import org.apache.spark.{SparkConf, SparkContext}
 
-/**
-  * Created by wy on 2017/3/14.
-  */
 //基于模型的图书推荐
 object BookRecommend {
 
@@ -35,7 +32,7 @@ object BookRecommend {
       .cache()
     //获取构建模型
     val modelDir = args(2)
-    val model = MatrixFactorizationModel.load(sc,modelDir)
+    val model = MatrixFactorizationModel.load(sc, modelDir)
     //将最佳模型在测试数据集上进行测试
     val testVariance = variance(model, testBookRatings, testBookRatings.count())
     println("在测试数据集上计算的方差为:" + testVariance)
@@ -45,30 +42,30 @@ object BookRecommend {
       val fields = lines.split("::")
       (fields(0).toInt, fields(1), fields(2))
     }
-    println("图书总数量:"+bookList.count())
+    println("图书总数量:" + bookList.count())
     //获取图书名称信息数据
     val booksName = bookList.map(x => (x._1, x._2)).collect().toMap
     //需要推荐用户的已阅读图书编号
     val personalRatingBookIds = bookRatingsList.filter(_._1 == userId).map(_._2).collect().toSet
-    println("已阅读并打分图书数量:"+personalRatingBookIds.size)
+    println("已阅读并打分图书数量:" + personalRatingBookIds.size)
     //在图书总数据中过滤掉已经阅读图书数据,得到需要对其评分的图书数据
     val needRatingBook = sc.parallelize(booksName.keys.filter(!personalRatingBookIds.contains(_)).toSeq)
-    println("需要打分的图书数量:"+needRatingBook.count())
+    println("需要打分的图书数量:" + needRatingBook.count())
     val resultDir = args(4)
     val hadoopConf = sc.hadoopConfiguration
     hadoopConf.set("fs.defaultFS", "hdfs://master:9000/")
     val fs = FileSystem.get(hadoopConf)
     val path = new Path(resultDir)
-    if(fs.exists(path)){
-      if(fs.isDirectory(path)){
-        fs.delete(path,true)
-      }else{
-        fs.delete(path,false)
+    if (fs.exists(path)) {
+      if (fs.isDirectory(path)) {
+        fs.delete(path, true)
+      } else {
+        fs.delete(path, false)
       }
     }
     fs.close()
     //将结果按评分从高到低排序保存在HDFS中
-    model.predict(needRatingBook.map((userId, _))).sortBy(-_.rating).map(x=>(x.product,x.rating)).saveAsTextFile(resultDir)
+    model.predict(needRatingBook.map((userId, _))).sortBy(-_.rating).map(x => (x.product, x.rating)).saveAsTextFile(resultDir)
     sc.stop()
   }
 

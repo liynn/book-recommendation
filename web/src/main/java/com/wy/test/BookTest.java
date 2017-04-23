@@ -15,18 +15,16 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
-/**
- * Created by wy on 2017/4/12.
- */
 public class BookTest extends BaseTest {
 
     @Resource
     private BookService bookService;
+
     /**
      * 添加用户信息
      */
     @Test
-    public void testAddUser(){
+    public void testAddUser() {
         List<String> users = FileUtil.read("/Users/wy/Documents/毕业设计/data/users.dat");
         //转换
         List<User> userList = Lists.newArrayList();
@@ -42,11 +40,12 @@ public class BookTest extends BaseTest {
         });
         //存储
         int count = 0;
-        for(User user : userList){
+        for (User user : userList) {
             count += bookService.addUser(user);
         }
-        Assert.assertEquals(userList.size(),count);
+        Assert.assertEquals(userList.size(), count);
     }
+
     /**
      * 添加图书信息
      */
@@ -69,17 +68,17 @@ public class BookTest extends BaseTest {
         });
         //存储
         int count = 0;
-        for(Book book :bookList){
+        for (Book book : bookList) {
             count += bookService.addBook(book);
         }
-        Assert.assertEquals(bookList.size(),count);
+        Assert.assertEquals(bookList.size(), count);
     }
 
     /**
      * 添加评分信息
      */
     @Test
-    public void testAddRating(){
+    public void testAddRating() {
         List<String> ratings = FileUtil.read("/Users/wy/Documents/毕业设计/data/ratings.dat");
         //转换
         List<Rating> ratingList = Lists.newArrayList();
@@ -94,9 +93,9 @@ public class BookTest extends BaseTest {
         });
         //存储
         int count = 0;
-        for(Rating rating :ratingList){
+        for (Rating rating : ratingList) {
             count += bookService.addRating(rating);
         }
-        Assert.assertEquals(ratingList.size(),count);
+        Assert.assertEquals(ratingList.size(), count);
     }
 }

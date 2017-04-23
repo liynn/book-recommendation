@@ -4,9 +4,6 @@ import org.apache.hadoop.fs.{FileSystem, Path}
 import org.apache.spark.mllib.recommendation.{ALS, Rating}
 import org.apache.spark.{SparkConf, SparkContext}
 
-/**
-  * Created by wy on 2017/3/14.
-  */
 //建立推荐模型
 object BuildRecommendModel {
 

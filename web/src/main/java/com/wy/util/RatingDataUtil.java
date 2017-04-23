@@ -10,12 +10,10 @@ import java.io.FileWriter;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created by wy on 2017/4/11.
- */
 public class RatingDataUtil {
 
-    private static  final Integer userCount = 1000;
+    private static final Integer userCount = 1000;
+
     /**
      * 构造评分数据
      *
@@ -25,12 +23,12 @@ public class RatingDataUtil {
         List<String> bookList = FileUtil.read("/Users/wy/Documents/毕业设计/data/books.dat");
         for (int i = 1; i <= userCount; i++) {
             int number = getNum(10, 50);
-            Map<String,String> ratings = Maps.newHashMap();
+            Map<String, String> ratings = Maps.newHashMap();
             for (int j = 0; j < number; j++) {
-                String key = i+"::" + getRandomBookId(bookList);
-                if(ratings.get(key) == null){
+                String key = i + "::" + getRandomBookId(bookList);
+                if (ratings.get(key) == null) {
                     FileUtil.write(fileName, key + "::" + getNum(1, 5) + "::" + System.currentTimeMillis());
-                    ratings.put(key,String.valueOf(i));
+                    ratings.put(key, String.valueOf(i));
                 }
             }
         }

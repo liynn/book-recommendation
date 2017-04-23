@@ -8,9 +8,6 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.util.List;
 
-/**
- * Created by wy on 2017/3/26.
- */
 public class FileUtil {
     /**
      * 追加写入数据列表

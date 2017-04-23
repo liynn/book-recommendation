@@ -8,9 +8,6 @@ import com.wy.vo.UserDetailVO;
 
 import java.util.List;
 
-/**
- * Created by wy on 2017/3/23.
- */
 public interface BookService {
 
     /**
@@ -48,4 +45,11 @@ public interface BookService {
      * @param userId 用户编号
      */
     UserDetailVO getUserDetail(Integer userId);
+
+    /**
+     * 查询判断用户是否存在
+     *
+     * @param userId 用户编号
+     */
+    Boolean isExist(Integer userId);
 }

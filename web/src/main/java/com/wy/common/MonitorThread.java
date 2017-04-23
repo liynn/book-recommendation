@@ -5,9 +5,6 @@ import com.wy.util.PropertyUtil;
 
 import org.apache.spark.launcher.SparkAppHandle;
 
-/**
- * Created by wy on 2017/4/20.
- */
 public class MonitorThread implements Runnable {
     private SparkAppHandle handle;
     private String appId;

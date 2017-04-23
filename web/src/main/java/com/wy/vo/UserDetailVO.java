@@ -4,9 +4,6 @@ import java.util.List;
 
 import lombok.Data;
 
-/**
- * Created by wy on 2017/4/13.
- */
 @Data
 public class UserDetailVO {
     private Integer userId; //编号

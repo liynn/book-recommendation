@@ -4,9 +4,6 @@ import org.apache.spark.mllib.recommendation.{ALS, MatrixFactorizationModel, Rat
 import org.apache.spark.rdd.RDD
 import org.apache.spark.{SparkConf, SparkContext}
 
-/**
-  * Created by wy on 2017/3/14.
-  */
 //基于模型的协同过滤
 object BookRecommendALS {
   def main(args: Array[String]) {
@@ -28,8 +25,8 @@ object BookRecommendALS {
       (x._4, Rating(x._1.toInt, x._2.toInt, x._3.toDouble)))
 
     //打印基本信息
-    println("\n评分总记录数: "+ bookRatings.count()
-      + " 用户总数: "+ bookRatings.map(_._2.user).distinct().count()
+    println("\n评分总记录数: " + bookRatings.count()
+      + " 用户总数: " + bookRatings.map(_._2.user).distinct().count()
       + " 图书总数: " + bookRatings.map(_._2.product).distinct().count())
 
     //获取个人评分信息
@@ -86,17 +83,17 @@ object BookRecommendALS {
       val temp = variance(model, validateBookRatings, validateBookRatings.count())
       //打印模型信息
       println("模型方差:" + temp
-          + " 隐藏因子数为:" + rank
-          + " 正则化参数为:" + lambda
-          + " 迭代次数为:" + iterator)
+        + " 隐藏因子数为:" + rank
+        + " 正则化参数为:" + lambda
+        + " 迭代次数为:" + iterator)
 
       //判断最佳模型
       if (temp < bestValidateRnse) {
-         bestModel = model
-         bestValidateRnse = temp
-         bestRank = rank
-         bestLambda = lambda
-         bestIterator = iterator
+        bestModel = model
+        bestValidateRnse = temp
+        bestRank = rank
+        bestLambda = lambda
+        bestIterator = iterator
       }
     }
 
@@ -106,7 +103,7 @@ object BookRecommendALS {
     println(" 隐藏因子数为:" + bestRank
       + " 正则化参数为: " + bestLambda
       + " 迭代次数为: " + bestIterator
-      + " 在测试数据集上计算的方差为: "+testVariance)
+      + " 在测试数据集上计算的方差为: " + testVariance)
 
     //训练数据加上验证数据的分数的平均分
     val meanRating = trainBookRatings.union(validateBookRatings).map(_.rating).mean()

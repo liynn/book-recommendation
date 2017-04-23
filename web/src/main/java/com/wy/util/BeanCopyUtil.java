@@ -8,9 +8,6 @@ import org.springframework.beans.BeanUtils;
 import java.util.Collections;
 import java.util.List;
 
-/**
- * Created by wy on 2017/4/13.
- */
 public class BeanCopyUtil {
     private BeanCopyUtil() {
     }

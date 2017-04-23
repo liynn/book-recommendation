@@ -7,9 +7,6 @@ import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
-/**
- * Created by wy on 2017/4/12.
- */
 @Mapper
 public interface RatingDao {
     Integer create(Rating rating);

@@ -2,9 +2,6 @@ package com.wy.domain;
 
 import lombok.Data;
 
-/**
- * Created by wy on 2017/4/12.
- */
 @Data
 public class Rating {
     private Integer userId; //用户编号

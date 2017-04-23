@@ -3,9 +3,6 @@ package com.wy.util;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by wy on 2017/4/8.
- */
 public class ApplicationUtil {
     //Spark运行状态
     private static Map<String, String> allAppStatus = new HashMap<>();

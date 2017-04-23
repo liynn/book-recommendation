@@ -6,7 +6,7 @@ SET FOREIGN_KEY_CHECKS = 0;
 -- ----------------------------
 DROP TABLE IF EXISTS `book`;
 CREATE TABLE `book` (
-  `id` varchar(11) NOT NULL COMMENT '编号',
+  `id` int(11) NOT NULL COMMENT '编号',
   `name` varchar(255) NOT NULL COMMENT '名称',
   `author` varchar(255) NOT NULL COMMENT '作者',
   `publisher` varchar(255) NOT NULL COMMENT '出版社',

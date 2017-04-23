@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>首页-豆瓣图书推荐</title>
+    <title>首页-图书推荐</title>
     <link href="${pageContext.request.contextPath}/static/css/bootstrap.min.css" rel="stylesheet">
     <link href="${pageContext.request.contextPath}/static/css/style.css" rel="stylesheet">
     <script src="${pageContext.request.contextPath}/static/js/jquery-3.2.0.min.js"
@@ -18,10 +18,10 @@
 <body style="padding: 0;margin: 0;border: 0">
 <nav class="navbar navbar-default"
      style="background-color: #3678ac;border-color: #105e89;height: 66px;">
-    <div class="container-fluid">
+    <div class="container-fluid" style="height: 65px;text-align: center">
         <div class="navbar-header">
             <a class="navbar-brand" href="#"
-               style="color: #ecf0f1;padding-left: 100px;font-size: 24px;line-height: 22px;">豆瓣图书推荐</a>
+               style="color: #ecf0f1;padding-left: 100px;font-size: 24px;line-height: 32px;">图书推荐系统</a>
         </div>
     </div>
 </nav>
@@ -30,17 +30,13 @@
         <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab"
                                                   data-toggle="tab">介绍</a></li>
         <li role="presentation">
-            <a href="#model" aria-controls="model" role="tab" data-toggle="tab">建立模型</a>
+            <a href="#model" aria-controls="model" role="tab" data-toggle="tab">图书模型</a>
         </li>
         <li role="presentation"><a href="#result" aria-controls="result" role="tab"
                                    data-toggle="tab">推荐信息</a></li>
     </ul>
     <div class="tab-content">
         <div role="tabpanel" class="tab-pane active text-center" id="home">简介
-            <div class="col-sm-offset-4 col-sm-10">
-                <button type="button" id="nextBtn" class="btn btn-primary col-md-6">下一步
-                </button>
-            </div>
         </div>
         <div role="tabpanel" class="tab-pane text-center" id="model"
              style="width: 80%;margin: 30px auto;">
@@ -91,14 +87,14 @@
                     </div>
                 </div>
             </div>
-            <div class="modal fade" id="tipModal" tabindex="-1" role="dialog"
+            <div class="modal fade" id="modelModal" tabindex="-1" role="dialog"
                  aria-labelledby="myModalLabel2">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="alert alert-info" style="margin-bottom: 0px;">
-                            <a href="#" onclick="closeTipModal('tipModal')" class="close">
+                            <a href="#" onclick="closeModelModal('modelModal')" class="close">
                                 &times; </a>
-                            <div id="tipId">模型训练完成!</div>
+                            <div id="modelId" style="text-align: center"></div>
                         </div>
                     </div>
                 </div>
@@ -109,7 +105,7 @@
                 <label>用户编号:</label>
                 <input type="text" id="userId" class="form-control" placeholder="用户编号"
                        style="display:inline;width: 150px;">
-                <button type="button" id="userBtn" class="btn btn-primary"
+                <button type="button" id="userBtn" class="btn btn-info"
                         style="margin-right: 50px;">查询
                 </button>
                 <labe style="margin-left: 50px;">推荐数目:</labe>
@@ -120,6 +116,12 @@
                 </select>
                 <button type="button" id="recommendBtn" class="btn btn-success">推荐</button>
             </div>
+            <span id="userLabel" style="margin-left: 10%;display: none;">用户基本信息:</span>
+            <div style="width: 80%;margin-left: 10%;">
+                <table class="table table-bordered" id="userBaseInfo"
+                       style="width: 100%;display: none;font-size: 14px; text-align: center">
+                </table>
+            </div>
             <span id="ratingLabel" style="margin-left: 10%;display: none;">用户评分的书籍有:</span>
             <div style="width: 80%;margin-left: 10%;">
                 <table class="table table-bordered" id="ratingBook"
@@ -129,14 +131,14 @@
             <div style="width: 80%;margin-left: 10%;">
                 <table class="table table-bordered" id="recommendBook"
                        style="width: 100%;display: none;font-size: 14px;"></table>
-                <div class="modal fade" id="userModal" tabindex="-1" role="dialog"
+                <div class="modal fade" id="tipModal" tabindex="-1" role="dialog"
                      aria-labelledby="myModalLabel2">
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
                             <div class="alert alert-info" style="margin-bottom: 0px;">
-                                <a href="#" onclick="closeModal('userModal')" class="close">
+                                <a href="#" onclick="closeTipModal('tipModal')" class="close">
                                     &times; </a>
-                                <div id="user">用户不存在</div>
+                                <div id="tipId" style="text-align: center;"></div>
                             </div>
                         </div>
                     </div>

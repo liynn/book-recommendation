@@ -2,9 +2,6 @@ package com.wy.domain;
 
 import lombok.Data;
 
-/**
- * Created by wy on 2017/3/23.
- */
 @Data
 public class Book {
     private Integer id; //编号

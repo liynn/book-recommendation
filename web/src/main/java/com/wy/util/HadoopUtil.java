@@ -13,9 +13,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.List;
 
-/**
- * Created by wy on 2017/3/29.
- */
 public class HadoopUtil {
 
     public static final String PREFIX = "/part-00000";

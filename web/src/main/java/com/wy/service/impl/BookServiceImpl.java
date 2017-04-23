@@ -11,6 +11,7 @@ import com.wy.domain.User;
 import com.wy.service.BookService;
 import com.wy.util.BeanCopyUtil;
 import com.wy.vo.BookVO;
+import com.wy.vo.PagingVO;
 import com.wy.vo.UserDetailVO;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -23,9 +24,6 @@ import javax.annotation.Resource;
 
 import lombok.extern.slf4j.Slf4j;
 
-/**
- * Created by wy on 2017/3/23.
- */
 @Slf4j
 @Service("bookService")
 public class BookServiceImpl implements BookService {
@@ -81,11 +79,12 @@ public class BookServiceImpl implements BookService {
         //查询用户基本信息
         UserDetailVO userDetailVO = new UserDetailVO();
         User dbUser = userDao.get(userId);
-        if (dbUser == null) {
-            return userDetailVO;
-        }
         userDetailVO.setUserId(dbUser.getId());
         userDetailVO.setName(dbUser.getName());
+        userDetailVO.setSex(dbUser.getSex());
+        userDetailVO.setAge(dbUser.getAge());
+        userDetailVO.setPhone(dbUser.getPhone());
+        userDetailVO.setEmail(dbUser.getEmail());
         //查询评分信息
         List<Rating> dbRatings = ratingDao.getByUserId(userId);
         if (CollectionUtils.isNotEmpty(dbRatings)) {
@@ -99,5 +98,17 @@ public class BookServiceImpl implements BookService {
             userDetailVO.setBookList(books);
         }
         return userDetailVO;
+    }
+
+    @Override
+    public Boolean isExist(Integer userId) {
+        if (userId == null) {
+            return Boolean.FALSE;
+        }
+        User dbUser = userDao.get(userId);
+        if (dbUser == null) {
+            return Boolean.FALSE;
+        }
+        return Boolean.TRUE;
     }
 }

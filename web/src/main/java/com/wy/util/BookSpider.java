@@ -9,9 +9,6 @@ import us.codecraft.webmagic.Site;
 import us.codecraft.webmagic.Spider;
 import us.codecraft.webmagic.processor.PageProcessor;
 
-/**
- * Created by wy on 2017/3/25.
- */
 public class BookSpider implements PageProcessor {
 
     //豆瓣图书标签页
@@ -30,46 +27,47 @@ public class BookSpider implements PageProcessor {
 
     /**
      * 爬取豆瓣图书编号
+     *
      * @param page 豆瓣页面地址
      */
     @Override
     public void process(Page page) {
         //获取所有的标签连接
-        if(page.getHtml().links().regex(TAG_REGEX).match()){
+        if (page.getHtml().links().regex(TAG_REGEX).match()) {
             List<String> tagLinks = page.getHtml().links().regex(TAG_REGEX).all();
             List<String> tagList = Lists.newArrayList();
             tagLinks.forEach(link -> {
-                if(!tagList.contains(link)){
+                if (!tagList.contains(link)) {
                     tagList.add(link);
                 }
             });
-            page.putField("tagLinks",tagList);
+            page.putField("tagLinks", tagList);
             page.addTargetRequests(tagList);
         }
-        if(page.getHtml().links().regex(PAGE_REGEX).match()){
+        if (page.getHtml().links().regex(PAGE_REGEX).match()) {
             List<String> pageLinks = page.getHtml().links().regex(PAGE_REGEX).all();
             List<String> pageList = Lists.newArrayList();
             pageLinks.forEach(link -> {
-                if(!pageList.contains(link)){
+                if (!pageList.contains(link)) {
                     pageList.add(link);
                 }
             });
-            page.putField("pageLinks",pageList);
+            page.putField("pageLinks", pageList);
             page.addTargetRequests(pageList);
         }
-        if(page.getHtml().links().regex(BOOK_REGEX).match()){
+        if (page.getHtml().links().regex(BOOK_REGEX).match()) {
             List<String> bookIds = page.getHtml().links().regex(BOOK_REGEX)
-                     .replace("https://book.douban.com/subject/","")
-                    .replace("/","")
+                    .replace("https://book.douban.com/subject/", "")
+                    .replace("/", "")
                     .all();
             List<String> ids = Lists.newArrayList();
             bookIds.forEach(id -> {
-                if(!ids.contains(id)){
+                if (!ids.contains(id)) {
                     ids.add(id);
                 }
             });
-            page.putField("ids",ids);
-            FileUtil.write("/Users/wy/books.dat",ids);
+            page.putField("ids", ids);
+            FileUtil.write("/Users/wy/books.dat", ids);
         }
     }
 

@@ -15,9 +15,6 @@ import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.List;
 
-/**
- * Created by wy on 2017/3/25.
- */
 public class HttpRequestUtil {
 
     //请求地址
