@@ -13,6 +13,7 @@ import com.wy.util.BeanCopyUtil;
 import com.wy.vo.BookVO;
 import com.wy.vo.PagingVO;
 import com.wy.vo.UserDetailVO;
+import com.wy.vo.UserVO;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.stereotype.Service;
@@ -38,18 +39,18 @@ public class BookServiceImpl implements BookService {
     private RatingDao ratingDao;
 
     @Override
-    public Integer addUser(User user) {
-        return userDao.create(user);
+    public Boolean addUser(User user) {
+        return userDao.create(user) == 1;
     }
 
     @Override
-    public Integer addBook(Book book) {
-        return bookDao.create(book);
+    public Boolean addBook(Book book) {
+        return bookDao.create(book) == 1;
     }
 
     @Override
-    public Integer addRating(Rating rating) {
-        return ratingDao.create(rating);
+    public Boolean addRating(Rating rating) {
+        return ratingDao.create(rating) == 1;
     }
 
     @Override
@@ -110,5 +111,44 @@ public class BookServiceImpl implements BookService {
             return Boolean.FALSE;
         }
         return Boolean.TRUE;
+    }
+
+    @Override
+    public PagingVO<Book> paging(Integer bookId, String name, Integer pageNo, Integer pageSize) {
+        PagingVO<Book> result = new PagingVO<>();
+        int limit = (pageNo - 1) * pageSize;
+        List<Book> paging = bookDao.paging(bookId, name, limit, pageSize);
+        if (CollectionUtils.isNotEmpty(paging)) {
+            result.setData(paging);
+            Integer count = bookDao.count(bookId, name);
+            result.setTotal(count);
+            result.setPageNo(pageNo);
+            result.setPageSize(pageSize);
+            result.setPageNumber(count, pageSize);
+        }
+        return result;
+    }
+
+    @Override
+    public UserVO login(String phone, String password) {
+        User dbUser = userDao.login(phone, password);
+        if (dbUser == null) {
+            return null;
+        }
+        return BeanCopyUtil.genBean(dbUser, UserVO.class);
+    }
+
+    @Override
+    public UserVO getUserByPhone(String phone) {
+        User dbUser = userDao.getByPhone(phone);
+        if (dbUser == null) {
+            return null;
+        }
+        return BeanCopyUtil.genBean(dbUser, UserVO.class);
+    }
+
+    @Override
+    public Rating getById(Integer userId, Integer bookId) {
+        return ratingDao.getById(userId, bookId);
     }
 }

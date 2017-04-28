@@ -9,8 +9,11 @@ import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.URI;
 import java.util.List;
 
 public class HadoopUtil {
@@ -31,6 +34,7 @@ public class HadoopUtil {
         //配置资源分配器
         conf.set("yarn.resourcemanager.scheduler.address", PropertyUtil.getProperty("yarn.resourcemanager.scheduler.address"));
         conf.set("mapreduce.jobhistory.address", PropertyUtil.getProperty("mapreduce.jobhistory.address"));
+        conf.setBoolean("dfs.support.append", true);
         return conf;
     }
 
@@ -58,6 +62,22 @@ public class HadoopUtil {
             e.printStackTrace();
         }
         return result;
+    }
+
+    /**
+     * 写入数据到HDFS文件系统中
+     *
+     * @param srcName 写入文件路径
+     * @param content 写入内容
+     */
+    public static void write(String srcName, String content) {
+        Configuration conf = getConf();
+        try (FileSystem fileSystem = FileSystem.get(URI.create(srcName), conf);
+             BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(fileSystem.append(new Path(srcName))))) {
+            writer.write(content);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**

@@ -20,7 +20,7 @@ public class RatingDataUtil {
      * @param fileName 评分数据保存路径
      */
     public static void getRatingsData(String fileName) {
-        List<String> bookList = FileUtil.read("/Users/wy/Documents/毕业设计/data/books.dat");
+        List<String> bookList = FileUtil.read(Thread.currentThread().getContextClassLoader().getResource("").getPath().replace("web/target/classes/", "") + "data/books.dat");
         for (int i = 1; i <= userCount; i++) {
             int number = getNum(10, 50);
             Map<String, String> ratings = Maps.newHashMap();
@@ -40,7 +40,7 @@ public class RatingDataUtil {
      * @param fileName 个人评分数据保存路径
      */
     public static void getPersonalRatingsData(String fileName) {
-        List<String> bookList = FileUtil.read("/Users/wy/Documents/毕业设计/data/books.dat");
+        List<String> bookList = FileUtil.read(Thread.currentThread().getContextClassLoader().getResource("").getPath().replace("web/target/classes/", "") + "data/books.dat");
         int number = getNum(10, 50);
         File file = new File(fileName);
         for (int i = 0; i < number; i++) {

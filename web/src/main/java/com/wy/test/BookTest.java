@@ -36,12 +36,15 @@ public class BookTest extends BaseTest {
             user.setAge(Integer.parseInt(result[3]));
             user.setPhone(result[4]);
             user.setEmail(result[5]);
+            user.setPassword("123456");
             userList.add(user);
         });
         //存储
         int count = 0;
         for (User user : userList) {
-            count += bookService.addUser(user);
+            if (bookService.addUser(user)) {
+                count += 1;
+            }
         }
         Assert.assertEquals(userList.size(), count);
     }
@@ -69,7 +72,9 @@ public class BookTest extends BaseTest {
         //存储
         int count = 0;
         for (Book book : bookList) {
-            count += bookService.addBook(book);
+            if (bookService.addBook(book)) {
+                count += 1;
+            }
         }
         Assert.assertEquals(bookList.size(), count);
     }
@@ -94,7 +99,9 @@ public class BookTest extends BaseTest {
         //存储
         int count = 0;
         for (Rating rating : ratingList) {
-            count += bookService.addRating(rating);
+            if (bookService.addRating(rating)) {
+                count += 1;
+            }
         }
         Assert.assertEquals(ratingList.size(), count);
     }

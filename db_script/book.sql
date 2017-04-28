@@ -39,6 +39,7 @@ CREATE TABLE `user` (
   `age` int(11) NOT NULL COMMENT '年龄',
   `phone` varchar(50) NOT NULL COMMENT '手机号',
   `email` varchar(50) NOT NULL COMMENT '邮箱',
+  `password` varchar(50) NOT NULL COMMENT '密码',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

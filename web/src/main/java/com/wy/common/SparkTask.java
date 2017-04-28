@@ -28,11 +28,11 @@ public class SparkTask {
      *
      * @return 模型任务名称
      */
-    public String buildRecommendModel(String address, String rank, String lambda, String iterator) {
+    public String buildRecommendModel(String rank, String lambda, String iterator) {
         String appId = "BuildRecommendModel";
         launcher.setMainClass(PropertyUtil.getProperty("model.main.class"));
         launcher.setMaster(PropertyUtil.getProperty("yarn.cluster"));
-        launcher.addAppArgs(PropertyUtil.getProperty("fs.defaultFS") + address, rank, lambda, iterator, PropertyUtil.getProperty("model.save.dir"));
+        launcher.addAppArgs(PropertyUtil.getProperty("book.ratings.dir"), rank, lambda, iterator, PropertyUtil.getProperty("model.save.dir"));
         SparkAppHandle sparkAppHandle = null;
         try {
             sparkAppHandle = launcher.startApplication();

@@ -12,4 +12,6 @@ public interface RatingDao {
     Integer create(Rating rating);
 
     List<Rating> getByUserId(@Param("userId") Integer userId);
+
+    Rating getById(@Param("userId") Integer userId, @Param("bookId") Integer bookId);
 }
