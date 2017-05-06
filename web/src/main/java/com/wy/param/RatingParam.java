@@ -1,5 +1,7 @@
 package com.wy.param;
 
+import org.hibernate.validator.constraints.NotBlank;
+
 import lombok.Data;
 
 /**
@@ -8,5 +10,6 @@ import lombok.Data;
 @Data
 public class RatingParam {
     private Integer bookId;
+    @NotBlank(message = "评分不能为空")
     private Double score;
 }

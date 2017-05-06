@@ -58,7 +58,7 @@
                     <a id="logout" href="#" style="color: #ecf0f1;">登出</a>
                 </span>
             </li>
-            <%} %>
+            <%}%>
         </ul>
     </div>
     </div>
@@ -90,7 +90,7 @@
                 </div>
                 <br/>
                 <input type="hidden" id="currentUserId"
-                       value="<%=userId%>"/>
+                       value="<%if(userId != null){%><%=userId%><%}%>"/>
                 <div style="text-align: center">
                     <button type="button" id="login" class="btn btn-primary"
                             style="width: 300px;margin-left: 75px">登录
@@ -187,7 +187,7 @@
         <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab"
                                                   data-toggle="tab" id="bookHall">图书大厅</a></li>
         <li role="presentation">
-            <a href="#model" aria-controls="model" role="tab" data-toggle="tab">图书模型</a>
+            <a href="#model" aria-controls="model" role="tab" data-toggle="tab">推荐模型</a>
         </li>
         <li role="presentation"><a href="#result" aria-controls="result" role="tab"
                                    data-toggle="tab">猜你喜欢</a></li>
@@ -285,7 +285,8 @@
             <div class="form-group text-center">
                 <label>用户编号:</label>
                 <input type="text" id="userId" class="form-control" placeholder="用户编号"
-                       style="display:inline;width: 150px;">
+                       style="display:inline;width: 150px;"
+                       value="<%if(userId != null){%><%=userId%><%}%>">
                 <button type="button" id="userBtn" class="btn btn-info"
                         style="margin-right: 50px;">查询
                 </button>

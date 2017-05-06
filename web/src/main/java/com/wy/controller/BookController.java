@@ -138,7 +138,11 @@ public class BookController {
      */
     @ResponseBody
     @RequestMapping(value = "book/addRatings", method = RequestMethod.POST)
-    public Response<String> addRatings(@RequestBody BookRatingParam param) {
+    public Response<String> addRatings(@Valid @RequestBody BookRatingParam param, BindingResult result) {
+        //参数校验
+        if (result.hasErrors()) {
+            return Response.fail(result.getAllErrors().get(0).getDefaultMessage());
+        }
         List<RatingParam> ratingParams = param.getRatings();
         String timestamp = String.valueOf(System.currentTimeMillis());
         if (CollectionUtils.isNotEmpty(ratingParams)) {

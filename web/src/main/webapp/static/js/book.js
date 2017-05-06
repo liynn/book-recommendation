@@ -82,6 +82,8 @@ $(document).ready(function () {
                    success: function (response) {
                        if (response.success) {
                            $('#registerModal').modal('hide');
+                           $('#tipId').html('注册用户成功(^_^)');
+                           openModal('tipModal');
                        } else {
                            $('#registerTip').html(response.error);
                        }
@@ -167,7 +169,7 @@ $(document).ready(function () {
         //获取当前登录用户编号
         var userId = $('#currentUserId').val();
         console.log(userId.length);
-        if (userId && userId != 'null') {
+        if (userId) {
             var param = '{"userId":' + userId + ',"ratings":[';
             $('#hall').children('tr').each(function () {
                 if ($(this).find('td').eq(0).find('input:checkbox:first').is(':checked')) {
@@ -238,12 +240,12 @@ $(document).ready(function () {
     function setProgress(id, value) {
         $('#' + id).css("width", value).text(value);
         value = parseInt(value.replace('%', ''));
-        if (value >= 0 && value <= 30) {
+        if (value >= 0 && value <= 20) {
             $('#' + id).addClass("progress-bar-danger");
-        } else if (value >= 30 && value <= 60) {
+        } else if (value >= 20 && value <= 40) {
             $('#' + id).removeClass("progress-bar-danger");
             $('#' + id).addClass("progress-bar-warning");
-        } else if (value >= 60 && value <= 90) {
+        } else if (value >= 40 && value <= 60) {
             $('#' + id).removeClass("progress-bar-warning");
             $('#' + id).addClass("progress-bar-info");
         } else {
@@ -511,7 +513,7 @@ function getAllBook(bookId, name, pageNo, pageSize) {
                            star +=
                                '<img class="starImg' + i + '" src="static/images/star_gray.png"/>';
                        }
-                       temp += '<tr><td><input type="checkbox"></td> <td>'
+                       temp += '<tr><td><input type="checkbox"></td><td>'
                                + content.id + '</td> <td style="color: #3377aa">'
                                + content.name + '</td><td>'
                                + content.author + '</td><td>'
